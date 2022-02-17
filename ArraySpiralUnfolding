@@ -1,0 +1,51 @@
+/**
+*This program takes a 2d array as input.
+*Then unfold the array in spiral order into a 1d array.
+*@author Duy Ho
+*@version 11/28/2011 adding JavaDoc
+*@param array an input 2d array type int
+*@return output a 1d array type int
+*/
+
+public static int[] spiralUnfolding(int[][] array){
+	    int topLimit=0;
+	    int botLimit=array.length-1;        // create bounding limits including top, bottom, left and right
+	    int leftLimit=0;
+	    int rightLimit=(array[0].length)-1;
+	    int step=0;
+	    int index=0;
+	    int[] output=new int[array.length*array[0].length];
+	    while (topLimit<=botLimit&&leftLimit<=rightLimit){       //use loop to unfold input array
+	        if(step==0){
+	            for(int i=leftLimit;i<=rightLimit;i++){          
+	                output[index]=array[topLimit][i];
+	                index+=1;
+	            }
+	            topLimit+=1;
+	        }
+	        else if(step==1){
+	            for(int i=topLimit;i<=botLimit;i++){
+	                output[index]=array[i][rightLimit];
+	                index+=1;
+	            }
+	            rightLimit-=1;
+	        }
+	        else if(step==2){
+	            for(int i=rightLimit;i>=leftLimit;i--){
+	                output[index]=array[botLimit][i];
+	                index+=1;
+	            }
+	            botLimit-=1;
+	        }
+	        else{
+	            for(int i=botLimit;i>=topLimit;i--){
+	                output[index]=array[i][leftLimit];
+	                index+=1;
+	            }
+	            leftLimit+=1;
+	        }
+	        step=(step+1)%4;
+	    } 
+	    return output;
+	
+	}
