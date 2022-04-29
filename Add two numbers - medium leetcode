@@ -1,0 +1,89 @@
+//source:https://leetcode.com/problems/remove-one-element-to-make-the-array-strictly-increasing/
+//solution:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+/**Solution:
+ *get num1 and num2 from l1 and l2.
+ *reverse them since the original lists store numbers in reverse order.
+ *calculate the sum of them, then reverse this sum because we will store it in a list, in reverse order.
+ *each node of list will have the value of sum%10.
+ *add each new node to the front of the list.
+ */
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        
+        int num1 = 0;
+        int num2 = 0;
+        //use these current nodes to traverse l1 and l2
+        ListNode current1 = l1;
+        ListNode current2 = l2;
+        //traverse to get num1 and num2
+        while(current1!=null){
+            num1+=current1.val;
+            current1 = current1.next;
+            num1*=10;//multiply num by 10 before adding the next digit
+            //explain:num1 = 3
+            //        num1 = 3*10 = 30
+            //        num1 + new value = 30 + 4 =34 and so on
+            // remember to divide num by 10 at the end to get the true value
+        }
+        num1 = num1/10;
+        //similar with num2
+        while(current2!=null){
+            num2+=current2.val;
+            current2 = current2.next;
+            num2*=10;
+        }
+        num2 = num2/10;
+        //get the reverse numbers of num1 and num2
+        num1 = reverse(num1);
+        num2 = reverse(num2);
+        //this is the number for output linkedlist which is sum of num1 and num2
+        int num = num1+num2;
+        num = reverse(num);
+        //variable which will be used for length of num
+        String strnum = Integer.toString(num);
+        //create the output linkedlist, this is the first node of the list
+        //this first node has the value which is the last digit of num, and point to null
+        ListNode output = new ListNode(num%10, null);
+        num=num/10;
+        for(int i=1; i<strnum.length(); i++){
+            ListNode newNode = new ListNode();
+            newNode.val = num%10;
+            System.out.println(newNode.val);
+            num = num/10;
+            //add newNode to the front of linkedlist
+            newNode.next = output;
+            output = newNode;
+        }
+        
+        return output;
+    }
+    
+    /**
+     *method used to reverse a number.
+     *we do this since the linkedlist store a number in reverse order, so we reverse it back.
+     * inputz: 1234 --> output: 4321.
+     */
+    public int reverse(int num){
+        int output = 0;
+        String string = Integer.toString(num);
+        String returnString = "";
+        int index = string.length()-1;
+        for(int i = 0; i<string.length(); i++){
+            returnString= returnString + string.charAt(index);
+            index-=1;
+        }
+        output = Integer.parseInt(returnString);
+        return output;
+    }
+}
