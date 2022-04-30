@@ -12,78 +12,54 @@
  */
 
 /**Solution:
- *get num1 and num2 from l1 and l2.
- *reverse them since the original lists store numbers in reverse order.
- *calculate the sum of them, then reverse this sum because we will store it in a list, in reverse order.
- *each node of list will have the value of sum%10.
- *add each new node to the front of the list.
+ *l1: 2 - 4 - 3
+ *l2: 5 - 6 - 4
+ *
+ *
+ *
  */
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode returnList = new ListNode(-1);
+        ListNode current = returnList;
         
-        int num1 = 0;
-        int num2 = 0;
-        //use these current nodes to traverse l1 and l2
-        ListNode current1 = l1;
-        ListNode current2 = l2;
-        //traverse to get num1 and num2
-        while(current1!=null){
-            num1+=current1.val;
-            current1 = current1.next;
-            num1*=10;//multiply num by 10 before adding the next digit
-            //explain:num1 = 3
-            //        num1 = 3*10 = 30
-            //        num1 + new value = 30 + 4 =34 and so on
-            // remember to divide num by 10 at the end to get the true value
-        }
-        num1 = num1/10;
-        //similar with num2
-        while(current2!=null){
-            num2+=current2.val;
-            current2 = current2.next;
-            num2*=10;
-        }
-        num2 = num2/10;
-        //get the reverse numbers of num1 and num2
-        num1 = reverse(num1);
-        num2 = reverse(num2);
-        //this is the number for output linkedlist which is sum of num1 and num2
-        int num = num1+num2;
-        num = reverse(num);
-        //variable which will be used for length of num
-        String strnum = Integer.toString(num);
-        //create the output linkedlist, this is the first node of the list
-        //this first node has the value which is the last digit of num, and point to null
-        ListNode output = new ListNode(num%10, null);
-        num=num/10;
-        for(int i=1; i<strnum.length(); i++){
-            ListNode newNode = new ListNode();
-            newNode.val = num%10;
-            System.out.println(newNode.val);
-            num = num/10;
-            //add newNode to the front of linkedlist
-            newNode.next = output;
-            output = newNode;
+        int tempSum = 0;
+        int tempCarry = 0;
+        int tempNum1 = 0;
+        int tempNum2 = 0;
+        while(l1!=null || l2!=null){
+            //if l1 still has element, get value of current element, else assign 0
+            //same with l2
+            tempNum1 = (l1!=null) ? l1.val : 0;
+            tempNum2 = (l2!=null) ? l2.val : 0;
+            
+            //sum is num1+num2+carry
+            tempSum = tempNum1 + tempNum2 + tempCarry;
+            
+            //newNode has value is the last digit of sum, first digit of sum will be carried
+            ListNode newNode = new ListNode(tempSum%10);
+            tempCarry = tempSum/10;
+            //link the newNode to the list   
+            current.next = newNode;
+            
+            //move to next node in each LinkedList
+            if(l1!=null){
+                l1=l1.next;
+            }
+            if(l2!=null){
+                l2=l2.next;
+            }
+            current = current.next;
         }
         
-        return output;
+        //if carry is not zero, that mean we need a new node
+        if(tempCarry>0){
+            ListNode newNode = new ListNode(tempCarry, null);
+            current.next = newNode;
+            current = current.next;
+        }
+        //return the list without the first node since we assigned its value with -1
+        return returnList.next;
     }
     
-    /**
-     *method used to reverse a number.
-     *we do this since the linkedlist store a number in reverse order, so we reverse it back.
-     * inputz: 1234 --> output: 4321.
-     */
-    public int reverse(int num){
-        int output = 0;
-        String string = Integer.toString(num);
-        String returnString = "";
-        int index = string.length()-1;
-        for(int i = 0; i<string.length(); i++){
-            returnString= returnString + string.charAt(index);
-            index-=1;
-        }
-        output = Integer.parseInt(returnString);
-        return output;
-    }
 }
